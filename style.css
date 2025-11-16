@@ -1,139 +1,79 @@
-/* Paleta de colores y fuentes */
 :root {
-    --primary-color: #27F53F;
-    --secondary-color: #F52750;
-    --background-color: #1a1d24; /* Negro azulado */
-    --card-background: #252931;
-    --text-color: #E6E6E6;
-    --font-family: 'Roboto', sans-serif;
+    --primary-color: #007BFF;
+    --secondary-color: #28A745;
+    --background-color: #FFFFFF;
+    --text-color: #343A40;
 }
 
 body {
+    font-family: 'Roboto', 'Open Sans', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: var(--font-family);
 }
 
-/* Navbar */
-.navbar {
-    background-color: var(--card-background) !important;
-    border-bottom: 1px solid var(--primary-color);
+.bg-primary {
+    background-color: var(--primary-color) !important;
 }
 
-.logo-text {
-    color: var(--primary-color) !important;
-    font-weight: bold;
-}
-
-.navbar .btn-primary {
+.btn-primary {
     background-color: var(--primary-color);
-    border: none;
-    color: #000;
-    font-weight: bold;
+    border-color: var(--primary-color);
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.navbar .btn-primary:hover {
-    background-color: #1fc731;
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-/* Títulos */
-h1, h2, h3, h4, h5 {
-    color: var(--primary-color);
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-/* Cards de productos */
-.card {
-    background-color: var(--card-background);
-    border: 1px solid #333;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
 }
 
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(39, 245, 63, 0.2);
+.btn-success {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.card-img-top {
+.btn-success:hover {
+    background-color: #1e7e34;
+    transform: translateY(-2px);
+}
+
+.product-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.product-card img {
     height: 200px;
     object-fit: cover;
 }
 
-.card-title {
-    color: var(--text-color);
-    font-size: 1rem; /* Ajuste para títulos largos */
+.modal-body img {
+    max-height: 400px;
+    object-fit: contain;
 }
 
-.card-text.price {
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    font-weight: bold;
+.modal-footer {
+    justify-content: space-between;
 }
 
-.btn-secondary {
-    background-color: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-}
-
-.btn-secondary:hover {
-    background-color: var(--primary-color);
-    color: #000;
-}
-
-/* Modal y Offcanvas */
-.modal-content, .offcanvas {
-    background-color: var(--card-background);
-    color: var(--text-color);
-    border: 1px solid var(--primary-color);
-}
-
-.modal-header, .offcanvas-header {
-    border-bottom: 1px solid #333;
-}
-
-.btn-close-white {
-    filter: invert(1);
-}
-
-#productModalBody img {
-    max-width: 100%;
-    border-radius: 8px;
-}
-
-/* Carrito */
-.cart-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-.cart-item img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-right: 15px;
-}
-.cart-item-details {
-    flex-grow: 1;
-}
-.quantity-controls button, .remove-item-btn {
-    background: transparent;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    width: 30px;
-    height: 30px;
-}
-
-/* Formulario de pago */
-#payment-form .form-control {
-    background-color: #333;
-    border: 1px solid #555;
-    color: var(--text-color);
-}
-
-#payment-form .form-control:focus {
-    background-color: #333;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(39, 245, 63, 0.25);
-    color: var(--text-color);
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-dialog.modal-lg {
+        max-width: 95%;
+    }
 }
