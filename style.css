@@ -1,16 +1,16 @@
-/* Define variables de color para los temas */
+/* =================================================================
+   DEFINICIÓN DE VARIABLES DE COLOR Y ESTILOS GLOBALES
+   ================================================================= */
+
+/* Variables para el Tema Claro (usadas por defecto) */
 :root {
-    /* Tema Claro (Light Mode) */
-    --primary-color-light: #4a148c; /* Morado oscuro */
-    --secondary-color-light: #00e676; /* Verde neón */
-    --background-color-light: #f5f5f5; /* Gris muy claro */
-    --card-bg-light: #ffffff;
-    --text-color-light: #212121;
-    --border-color-light: #e0e0e0;
+    --bs-body-bg: #f5f5f5; /* Fondo gris muy claro */
+    --bs-body-color: #212121; /* Texto oscuro */
+    --bs-border-color: #e0e0e0;
 }
 
+/* Variables para el Tema Oscuro */
 [data-bs-theme="dark"] {
-    /* Tema Oscuro (Gamer Dark Mode) */
     --bs-primary: #00e676; /* Verde neón */
     --bs-primary-rgb: 0, 230, 118;
     --bs-secondary: #6200ea; /* Morado intenso */
@@ -20,16 +20,10 @@
     --bs-border-color: #333;
 }
 
+/* Estilos que se aplican a ambos temas */
 body {
     font-family: 'Roboto', sans-serif;
     transition: background-color 0.3s, color 0.3s;
-}
-
-/* Estilo de la barra de navegación */
-.navbar {
-    background-color: rgba(30, 30, 30, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid #333;
 }
 
 .navbar-brand {
@@ -41,73 +35,87 @@ body {
     color: #fff;
 }
 
-/* Estilo de las tarjetas de producto */
-.product-card {
-    background-color: #1e1e1e;
-    border: 1px solid #333;
-    transition: transform 0.3s, box-shadow 0.3s;
+/* =================================================================
+   ESTILOS ESPECÍFICOS PARA EL TEMA OSCURO
+   ================================================================= */
+[data-bs-theme="dark"] {
+    /* Barra de navegación */
+    .navbar {
+        background-color: rgba(30, 30, 30, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid #333;
+    }
+
+    /* Tarjetas de producto */
+    .product-card {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(var(--bs-primary-rgb), 0.5);
+        border-color: var(--bs-primary);
+    }
+
+    .card-title {
+        color: #fff; /* Título blanco solo en modo oscuro */
+    }
+
+    /* Botones */
+    .btn-primary {
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
+        color: #121212;
+        font-weight: bold;
+    }
+
+    .btn-primary:hover {
+        background-color: #fff;
+        border-color: #fff;
+        color: #121212;
+    }
+
+    .btn-success {
+        background-color: var(--bs-secondary);
+        border-color: var(--bs-secondary);
+    }
+    
+    /* Modales */
+    .modal-content {
+        background-color: #212121;
+        border: 1px solid #444;
+    }
+
+    .modal-header, .modal-footer {
+        border-bottom: 1px solid #444;
+        border-top: 1px solid #444;
+    }
+
+    .list-group-item {
+        background-color: transparent;
+        border-color: #444;
+    }
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(var(--bs-primary-rgb), 0.5);
-    border-color: var(--bs-primary);
-}
-
+/* =================================================================
+   ESTILOS DEL ESLOGAN, FOOTER Y ANIMACIONES (Aplican a ambos temas)
+   ================================================================= */
 .product-card img {
     height: 200px;
     object-fit: cover;
 }
 
-.card-title {
-    color: #fff;
-}
-
-/* Estilos de botones */
-.btn-primary {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
-    color: #121212;
-    font-weight: bold;
-}
-
-.btn-primary:hover {
-    background-color: #fff;
-    border-color: #fff;
-    color: #121212;
-}
-
-.btn-success {
-    background-color: var(--bs-secondary);
-    border-color: var(--bs-secondary);
-}
-
-/* Estilo para los Modales */
-.modal-content {
-    background-color: #212121;
-    border: 1px solid #444;
-}
-
-.modal-header, .modal-footer {
-    border-bottom: 1px solid #444;
-    border-top: 1px solid #444;
-}
-
-.list-group-item {
-    background-color: transparent;
-    border-color: #444;
-}
-
-/* --- ESTILO DEL ESLOGAN ACTUALIZADO --- */
+/* Estilo para el eslogan */
 .text-slogan {
-    font-size: 1.6rem; /* Hacemos el texto más grande */
-    font-weight: 700; /* Le damos más peso (bold) */
-    color: var(--bs-primary); /* Usamos el color verde neón principal */
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--bs-primary);
     text-shadow: 
         0 0 5px rgba(var(--bs-primary-rgb), 0.7), 
-        0 0 10px rgba(var(--bs-primary-rgb), 0.5); /* Efecto de brillo neón */
-    letter-spacing: 1px; /* Añadimos espacio entre letras para un look más épico */
-    animation: pulse-glow 4s infinite alternate; /* Aplicamos la animación de pulso */
+        0 0 10px rgba(var(--bs-primary-rgb), 0.5);
+    letter-spacing: 1px;
+    animation: pulse-glow 4s infinite alternate;
 }
 
 /* Estilo para el footer */
@@ -132,7 +140,7 @@ footer {
     color: #888;
 }
 
-/* --- ANIMACIÓN PARA EL ESLOGAN --- */
+/* Animación para el eslogan */
 @keyframes pulse-glow {
     from {
         text-shadow: 
