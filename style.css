@@ -1,60 +1,57 @@
+/* Define variables de color para los temas */
 :root {
-    --primary-color: #007BFF;
-    --secondary-color: #28A745;
-    --background-color: #FFFFFF;
-    --text-color: #343A40;
+    /* Tema Claro (Light Mode) */
+    --primary-color-light: #4a148c; /* Morado oscuro */
+    --secondary-color-light: #00e676; /* Verde neón */
+    --background-color-light: #f5f5f5; /* Gris muy claro */
+    --card-bg-light: #ffffff;
+    --text-color-light: #212121;
+    --border-color-light: #e0e0e0;
+}
+
+[data-bs-theme="dark"] {
+    /* Tema Oscuro (Gamer Dark Mode) */
+    --bs-primary: #00e676; /* Verde neón */
+    --bs-primary-rgb: 0, 230, 118;
+    --bs-secondary: #6200ea; /* Morado intenso */
+    --bs-secondary-rgb: 98, 0, 234;
+    --bs-body-bg: #121212; /* Negro de fondo */
+    --bs-body-color: #e0e0e0; /* Texto gris claro */
+    --bs-border-color: #333;
 }
 
 body {
-    font-family: 'Roboto', 'Open Sans', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.bg-primary {
-    background-color: var(--primary-color) !important;
+/* Estilo de la barra de navegación */
+.navbar {
+    background-color: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #333;
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    transition: background-color 0.3s, transform 0.2s;
+.navbar-brand {
+    font-weight: 700;
+    color: var(--bs-primary);
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+.navbar-brand:hover {
+    color: #fff;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
-}
-
-.btn-success {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-success:hover {
-    background-color: #1e7e34;
-    transform: translateY(-2px);
-}
-
+/* Estilo de las tarjetas de producto */
 .product-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px rgba(var(--bs-primary-rgb), 0.5);
+    border-color: var(--bs-primary);
 }
 
 .product-card img {
@@ -62,18 +59,41 @@ body {
     object-fit: cover;
 }
 
-.modal-body img {
-    max-height: 400px;
-    object-fit: contain;
+.card-title {
+    color: #fff;
 }
 
-.modal-footer {
-    justify-content: space-between;
+/* Estilos de botones */
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #121212;
+    font-weight: bold;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .modal-dialog.modal-lg {
-        max-width: 95%;
-    }
+.btn-primary:hover {
+    background-color: #fff;
+    border-color: #fff;
+    color: #121212;
+}
+
+.btn-success {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+}
+
+/* Estilo para los Modales */
+.modal-content {
+    background-color: #212121;
+    border: 1px solid #444;
+}
+
+.modal-header, .modal-footer {
+    border-bottom: 1px solid #444;
+    border-top: 1px solid #444;
+}
+
+.list-group-item {
+    background-color: transparent;
+    border-color: #444;
 }
