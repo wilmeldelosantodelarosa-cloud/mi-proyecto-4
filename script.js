@@ -10,14 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let products = [];
 
-    // --- CAMBIO PRINCIPAL: Datos de los productos locales ---
+    // --- CAMBIO PRINCIPAL: Rutas de imágenes locales ---
+    // Ahora, la clave "image" apunta a la carpeta "img" de tu proyecto.
+    // Nota: He ajustado las primeras 5. Deberás descargar las demás y actualizar la ruta.
     const localProductData = [
       {
         "id": 1,
         "title": "NVIDIA GeForce RTX 4090",
         "category": "Tarjeta Gráfica",
         "price": 1899.99,
-        "image": "https://www.techpowerup.com/review/nvidia-geforce-rtx-4090/images/card-front.jpg",
+        "image": "img/1.jpg", // Ruta local
         "description": "La GPU más poderosa del mercado, ideal para gaming 4K y creación de contenido."
       },
       {
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "title": "AMD Radeon RX 7900 XTX",
         "category": "Tarjeta Gráfica",
         "price": 1099.99,
-        "image": "https://www.techpowerup.com/review/amd-radeon-rx-7900-xtx/images/card-front.jpg",
+        "image": "img/2.jpg", // Ruta local
         "description": "Una tarjeta gráfica de última generación con excepcional rendimiento en 4K."
       },
       {
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "title": "Intel Core i9-14900K",
         "category": "Procesador",
         "price": 649.99,
-        "image": "https://www.intel.com/content/dam/www/central-libraries/us/en/images/processor-badge-i9.png",
+        "image": "img/3.png", // Ruta local (es .png)
         "description": "CPU tope de gama para gaming competitivo y tareas intensivas."
       },
       {
@@ -41,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "title": "AMD Ryzen 9 7950X",
         "category": "Procesador",
         "price": 599.99,
-        "image": "https://www.amd.com/system/files/2022-09/1716789-rz7950x-pib-1260x709.png",
+        "image": "img/4.png", // Ruta local (es .png)
         "description": "Procesador AM5 de 16 núcleos ideal para multitarea extrema."
       },
       {
@@ -49,27 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
         "title": "MSI MPG X670E Carbon WiFi",
         "category": "Placa Base",
         "price": 399.99,
-        "image": "https://asset.msi.com/resize/image/global/product/product_16626147979264ee54c.png",
+        "image": "img/5.png", // Ruta local (es .png)
         "description": "Placa base premium para procesadores Ryzen serie 7000."
       },
-      // ... (Pega aquí el resto de tus 100 productos para no hacer esta respuesta excesivamente larga)
-      // Ejemplo de cómo continuar:
-      {
-        "id": 6,
-        "title": "ASUS ROG Strix B650E-F Gaming",
-        "category": "Placa Base",
-        "price": 329.99,
-        "image": "https://dlcdnwebimgs.asus.com/gain/631661F92F2C6F92AD9D02C7E075C533",
-        "description": "Placa base con PCIe 5.0 y WiFi 6E para setups modernos."
-      },
-      {
-        "id": 100,
-        "title": "ASUS ROG Chakram X",
-        "category": "Mouse",
-        "price": 159.99,
-        "image": "https://dlcdnwebimgs.asus.com/gain/F2D2388322D2A5B3726A2E2E664FDC54",
-        "description": "Mouse inalámbrico personalizable con joystick integrado."
-      }
+      // ... DEBES CONTINUAR DESCARGANDO LAS IMÁGENES Y ACTUALIZANDO LAS RUTAS PARA LOS DEMÁS PRODUCTOS ...
+      // Ejemplo:
+      // {
+      //   "id": 6,
+      //   "title": "ASUS ROG Strix B650E-F Gaming",
+      //   "category": "Placa Base",
+      //   "price": 329.99,
+      //   "image": "img/6.jpg", // Tendrías que descargarla y guardarla como 6.jpg
+      //   "description": "Placa base con PCIe 5.0 y WiFi 6E para setups modernos."
+      // },
     ];
 
     // 1. Cargar y mostrar productos desde los datos locales
@@ -107,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // El resto del código JS no necesita cambios
+    
     // 2. Mostrar detalles del producto en el modal
     window.showProductDetails = (productId) => {
         const product = products.find(p => p.id === productId);
@@ -129,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productModal.show();
     };
     
-    // 3. Lógica del Carrito (sin cambios)
+    // 3. Lógica del Carrito
     function addToCart(productId, quantity = 1) {
         const existingItem = cart.find(item => item.id === productId);
         if (existingItem) {
@@ -204,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCart();
     };
     
-    // 4. Lógica de Pago y Generación de PDF (sin cambios)
+    // 4. Lógica de Pago y Generación de PDF
     paymentForm.addEventListener('submit', (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -234,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const doc = new jsPDF({
             orientation: 'p',
             unit: 'mm',
-            format: [80, 200] // Aumenté un poco el largo por si el recibo es largo
+            format: [80, 200]
         });
 
         const storeName = "ShopMaster";
@@ -266,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = item.title.length > 14 ? item.title.substring(0, 14) + '.' : item.title;
             doc.text(`${name.padEnd(16)} ${item.quantity.toString().padStart(3)}    $${subtotal.padStart(7)}`, 5, y);
             y += 5;
-             if (y > 190) { // Salto de página si el recibo es muy largo
+             if (y > 190) {
                 doc.addPage();
                 y = 10;
             }
@@ -284,6 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- INICIALIZACIÓN ---
-    loadProducts(); // Llamamos a la nueva función que usa los datos locales
+    loadProducts();
     updateCart();
 });
