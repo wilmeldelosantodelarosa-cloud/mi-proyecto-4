@@ -60,6 +60,7 @@ h1, h2, h3, h4, h5 {
 
 .card-title {
     color: var(--text-color);
+    font-size: 1rem; /* Ajuste para títulos largos */
 }
 
 .card-text.price {
@@ -97,15 +98,6 @@ h1, h2, h3, h4, h5 {
 #productModalBody img {
     max-width: 100%;
     border-radius: 8px;
-}
-
-.modal-body ul {
-    list-style: none;
-    padding: 0;
-}
-
-.modal-body ul li {
-    margin-bottom: 10px;
 }
 
 /* Carrito */
