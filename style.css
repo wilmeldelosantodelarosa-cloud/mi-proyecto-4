@@ -97,3 +97,34 @@ body {
     background-color: transparent;
     border-color: #444;
 }
+
+/* --- NUEVOS ESTILOS --- */
+
+/* Estilo para el eslogan */
+.text-slogan {
+    color: #aaa; /* Un gris más suave para que no compita con el título */
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* Estilo para el footer */
+footer {
+    background-color: #1a1a1a; /* Un poco más oscuro que las tarjetas */
+    border-top: 1px solid var(--bs-border-color);
+}
+
+.social-icons a {
+    font-size: 1.8rem; /* Tamaño de los íconos */
+    color: #e0e0e0;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: var(--bs-primary); /* Color verde neón al pasar el mouse */
+    transform: translateY(-3px); /* Efecto de levitación */
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: #888; /* Texto de copyright más sutil */
+}
