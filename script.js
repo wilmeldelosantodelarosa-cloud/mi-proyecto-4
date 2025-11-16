@@ -9,22 +9,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let products = [];
-    
-    const API_URL = 'https://wilmeldelosantodelarosa-cloud.github.io/gamer-api/products.json';
 
-    // 1. Cargar y mostrar productos
-    async function fetchProducts() {
+    // --- CAMBIO PRINCIPAL: Datos de los productos locales ---
+    const localProductData = [
+      {
+        "id": 1,
+        "title": "NVIDIA GeForce RTX 4090",
+        "category": "Tarjeta Gráfica",
+        "price": 1899.99,
+        "image": "https://www.techpowerup.com/review/nvidia-geforce-rtx-4090/images/card-front.jpg",
+        "description": "La GPU más poderosa del mercado, ideal para gaming 4K y creación de contenido."
+      },
+      {
+        "id": 2,
+        "title": "AMD Radeon RX 7900 XTX",
+        "category": "Tarjeta Gráfica",
+        "price": 1099.99,
+        "image": "https://www.techpowerup.com/review/amd-radeon-rx-7900-xtx/images/card-front.jpg",
+        "description": "Una tarjeta gráfica de última generación con excepcional rendimiento en 4K."
+      },
+      {
+        "id": 3,
+        "title": "Intel Core i9-14900K",
+        "category": "Procesador",
+        "price": 649.99,
+        "image": "https://www.intel.com/content/dam/www/central-libraries/us/en/images/processor-badge-i9.png",
+        "description": "CPU tope de gama para gaming competitivo y tareas intensivas."
+      },
+      {
+        "id": 4,
+        "title": "AMD Ryzen 9 7950X",
+        "category": "Procesador",
+        "price": 599.99,
+        "image": "https://www.amd.com/system/files/2022-09/1716789-rz7950x-pib-1260x709.png",
+        "description": "Procesador AM5 de 16 núcleos ideal para multitarea extrema."
+      },
+      {
+        "id": 5,
+        "title": "MSI MPG X670E Carbon WiFi",
+        "category": "Placa Base",
+        "price": 399.99,
+        "image": "https://asset.msi.com/resize/image/global/product/product_16626147979264ee54c.png",
+        "description": "Placa base premium para procesadores Ryzen serie 7000."
+      },
+      // ... (Pega aquí el resto de tus 100 productos para no hacer esta respuesta excesivamente larga)
+      // Ejemplo de cómo continuar:
+      {
+        "id": 6,
+        "title": "ASUS ROG Strix B650E-F Gaming",
+        "category": "Placa Base",
+        "price": 329.99,
+        "image": "https://dlcdnwebimgs.asus.com/gain/631661F92F2C6F92AD9D02C7E075C533",
+        "description": "Placa base con PCIe 5.0 y WiFi 6E para setups modernos."
+      },
+      {
+        "id": 100,
+        "title": "ASUS ROG Chakram X",
+        "category": "Mouse",
+        "price": 159.99,
+        "image": "https://dlcdnwebimgs.asus.com/gain/F2D2388322D2A5B3726A2E2E664FDC54",
+        "description": "Mouse inalámbrico personalizable con joystick integrado."
+      }
+    ];
+
+    // 1. Cargar y mostrar productos desde los datos locales
+    function loadProducts() {
         try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-
-            // La API devuelve un objeto { "products": [...] }, accedemos al array.
-            products = data.products; 
-            
+            products = localProductData;
             displayProducts(products);
         } catch (error) {
-            console.error('Error fetching products:', error);
+            console.error('Error al cargar los productos locales:', error);
             productContainer.innerHTML = '<p class="text-danger">No se pudieron cargar los productos.</p>';
         }
     }
@@ -35,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'col-lg-3 col-md-4 col-sm-6';
             
-            // Usamos la clave "title" para el nombre y la URL de imagen directamente.
             const imageUrl = product.image;
             const productName = product.title;
 
@@ -59,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const product = products.find(p => p.id === productId);
         if (!product) return;
 
-        // Se ajustan las claves para el modal
         document.getElementById('modal-product-image').src = product.image;
         document.getElementById('modal-product-title').textContent = product.title;
         document.getElementById('modal-product-description').textContent = product.description;
@@ -77,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productModal.show();
     };
     
-    // 3. Lógica del Carrito
+    // 3. Lógica del Carrito (sin cambios)
     function addToCart(productId, quantity = 1) {
         const existingItem = cart.find(item => item.id === productId);
         if (existingItem) {
@@ -104,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         cartItemsContainer.innerHTML = cart.map(item => {
-            // Se ajustan las claves para el carrito
             const imageUrl = item.image;
             const productName = item.title;
             return `
@@ -153,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCart();
     };
     
-    // 4. Lógica de Pago y Generación de PDF
+    // 4. Lógica de Pago y Generación de PDF (sin cambios)
     paymentForm.addEventListener('submit', (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -183,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const doc = new jsPDF({
             orientation: 'p',
             unit: 'mm',
-            format: [80, 150]
+            format: [80, 200] // Aumenté un poco el largo por si el recibo es largo
         });
 
         const storeName = "ShopMaster";
@@ -212,10 +263,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cart.forEach(item => {
             const subtotal = (item.price * item.quantity).toFixed(2);
-            // Usar item.title para el nombre en el PDF
             const name = item.title.length > 14 ? item.title.substring(0, 14) + '.' : item.title;
             doc.text(`${name.padEnd(16)} ${item.quantity.toString().padStart(3)}    $${subtotal.padStart(7)}`, 5, y);
             y += 5;
+             if (y > 190) { // Salto de página si el recibo es muy largo
+                doc.addPage();
+                y = 10;
+            }
         });
 
         doc.text("---------------------------------", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
@@ -229,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.save(`recibo_ShopMaster_${Date.now()}.pdf`);
     }
 
-    // Inicialización
-    fetchProducts();
+    // --- INICIALIZACIÓN ---
+    loadProducts(); // Llamamos a la nueva función que usa los datos locales
     updateCart();
 });
