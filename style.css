@@ -98,33 +98,50 @@ body {
     border-color: #444;
 }
 
-/* --- NUEVOS ESTILOS --- */
-
-/* Estilo para el eslogan */
+/* --- ESTILO DEL ESLOGAN ACTUALIZADO --- */
 .text-slogan {
-    color: #aaa; /* Un gris más suave para que no compita con el título */
-    font-style: italic;
-    font-weight: 500;
+    font-size: 1.6rem; /* Hacemos el texto más grande */
+    font-weight: 700; /* Le damos más peso (bold) */
+    color: var(--bs-primary); /* Usamos el color verde neón principal */
+    text-shadow: 
+        0 0 5px rgba(var(--bs-primary-rgb), 0.7), 
+        0 0 10px rgba(var(--bs-primary-rgb), 0.5); /* Efecto de brillo neón */
+    letter-spacing: 1px; /* Añadimos espacio entre letras para un look más épico */
+    animation: pulse-glow 4s infinite alternate; /* Aplicamos la animación de pulso */
 }
 
 /* Estilo para el footer */
 footer {
-    background-color: #1a1a1a; /* Un poco más oscuro que las tarjetas */
+    background-color: #1a1a1a;
     border-top: 1px solid var(--bs-border-color);
 }
 
 .social-icons a {
-    font-size: 1.8rem; /* Tamaño de los íconos */
+    font-size: 1.8rem;
     color: #e0e0e0;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-icons a:hover {
-    color: var(--bs-primary); /* Color verde neón al pasar el mouse */
-    transform: translateY(-3px); /* Efecto de levitación */
+    color: var(--bs-primary);
+    transform: translateY(-3px);
 }
 
 .footer-text {
     font-size: 0.9rem;
-    color: #888; /* Texto de copyright más sutil */
+    color: #888;
+}
+
+/* --- ANIMACIÓN PARA EL ESLOGAN --- */
+@keyframes pulse-glow {
+    from {
+        text-shadow: 
+            0 0 5px rgba(var(--bs-primary-rgb), 0.6), 
+            0 0 10px rgba(var(--bs-primary-rgb), 0.4);
+    }
+    to {
+        text-shadow: 
+            0 0 10px rgba(var(--bs-primary-rgb), 0.8), 
+            0 0 20px rgba(var(--bs-primary-rgb), 0.6);
+    }
 }
