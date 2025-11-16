@@ -1,88 +1,147 @@
-/* Paleta de Colores y Tipografía */
+/* Paleta de colores y fuentes */
 :root {
-    --primary-color: #007BFF; /* Azul eléctrico */
-    --secondary-color: #28A745; /* Verde */
-    --background-color: #FFFFFF; /* Blanco */
-    --text-color: #343A40; /* Gris oscuro */
+    --primary-color: #27F53F;
+    --secondary-color: #F52750;
+    --background-color: #1a1d24; /* Negro azulado */
+    --card-background: #252931;
+    --text-color: #E6E6E6;
+    --font-family: 'Roboto', sans-serif;
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
+    font-family: var(--font-family);
 }
 
-/* Estilos de la barra de navegación */
+/* Navbar */
 .navbar {
-    background-color: var(--primary-color) !important;
+    background-color: var(--card-background) !important;
+    border-bottom: 1px solid var(--primary-color);
 }
 
-/* Estilos para las tarjetas de productos */
-.product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.logo-text {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
+
+.navbar .btn-primary {
+    background-color: var(--primary-color);
     border: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: #000;
+    font-weight: bold;
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+.navbar .btn-primary:hover {
+    background-color: #1fc731;
+}
+
+/* Títulos */
+h1, h2, h3, h4, h5 {
+    color: var(--primary-color);
+}
+
+/* Cards de productos */
+.card {
+    background-color: var(--card-background);
+    border: 1px solid #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(39, 245, 63, 0.2);
 }
 
 .card-img-top {
-    width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
 .card-title {
-    font-weight: 700;
     color: var(--text-color);
-    /* Para evitar que los títulos largos rompan el diseño */
-    min-height: 48px; 
 }
 
-.card-text {
-    color: #6c757d;
-}
-
-.card-price {
-    font-size: 1.25rem;
+.card-text.price {
+    color: var(--primary-color);
+    font-size: 1.5rem;
     font-weight: bold;
-    color: var(--secondary-color);
 }
 
-.btn-primary {
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
     background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    color: #000;
 }
 
-.btn-success {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
+/* Modal y Offcanvas */
+.modal-content, .offcanvas {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
 }
 
-/* Estilos para el Carrito */
-.cart-item-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
+.modal-header, .offcanvas-header {
+    border-bottom: 1px solid #333;
 }
 
-.cart-item-actions button {
-    width: 30px;
-    height: 30px;
+.btn-close-white {
+    filter: invert(1);
+}
+
+#productModalBody img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.modal-body ul {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-body ul li {
+    margin-bottom: 10px;
+}
+
+/* Carrito */
+.cart-item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    margin-bottom: 15px;
+}
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+.cart-item-details {
+    flex-grow: 1;
+}
+.quantity-controls button, .remove-item-btn {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    width: 30px;
+    height: 30px;
 }
 
-/* Animaciones suaves */
-.modal.fade .modal-dialog {
-    transition: transform 0.3s ease-out;
+/* Formulario de pago */
+#payment-form .form-control {
+    background-color: #333;
+    border: 1px solid #555;
+    color: var(--text-color);
 }
 
-.offcanvas {
-    transition: transform 0.3s ease-in-out;
+#payment-form .form-control:focus {
+    background-color: #333;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(39, 245, 63, 0.25);
+    color: var(--text-color);
 }
