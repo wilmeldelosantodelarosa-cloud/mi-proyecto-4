@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // URL de la API de productos
-    const API_URL = 'https://raw.githubusercontent.com/wilmeldelosantodelarosa-cloud/gamer-api/refs/heads/main/products.json';
+   const API_URL = 'https://raw.githubusercontent.com/wilmeldelosantodelarosa-cloud/gamer-api/main/products.json';
 
     // Selectores de elementos del DOM
     const productContainer = document.getElementById('product-container');
