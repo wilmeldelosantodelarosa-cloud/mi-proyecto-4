@@ -3,123 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kratos Tech - Tienda Gamer</title>
-
-    <!-- Bootstrap 5 CSS -->
+    <title>TechStore</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    
-    <!-- Google Fonts (Roboto) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- Tu CSS Personalizado -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand logo-text" href="#">🛒 Kratos Tech</a>
-            <button class="btn btn-primary position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas">
-                <i class="fas fa-shopping-cart"></i> Carrito
-                <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    0
-                </span>
+    <!-- Header -->
+    <header class="bg-primary text-white text-center p-3 shadow-sm">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h3"><i class="fas fa-shopping-cart"></i> TechStore</h1>
+            <button class="btn btn-secondary" id="cart-button">
+                <i class="fas fa-shopping-bag"></i> Carrito <span class="badge bg-light text-dark" id="cart-count">0</span>
             </button>
         </div>
-    </nav>
+    </header>
 
-    <!-- Contenido Principal -->
+    <!-- Main Content -->
     <main class="container my-5">
-        <h1 class="text-center mb-4">Nuestros Productos Gamer</h1>
-        <div id="product-container" class="row g-4">
-            <!-- Los productos se cargarán aquí desde JavaScript -->
+        <div id="product-list" class="row g-4">
+            <!-- Product cards will be inserted here by JavaScript -->
         </div>
     </main>
 
-    <!-- Modal de Producto -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <!-- Product Modal -->
+    <div class="modal fade" id="product-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="productModalTitle"></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="productModalBody">
-                    <!-- Contenido del modal se carga aquí -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <img id="modal-image" src="" class="img-fluid rounded" alt="Product Image">
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Categoría:</strong> <span id="modal-category"></span></li>
+                                <li class="list-group-item"><strong>Descripción:</strong> <span id="modal-description"></span></li>
+                                <li class="list-group-item"><strong>Precio:</strong> <span id="modal-price" class="fw-bold"></span></li>
+                            </ul>
+                            <div class="d-flex align-items-center mt-3">
+                                <label for="modal-quantity" class="form-label me-2">Cantidad:</label>
+                                <input type="number" id="modal-quantity" class="form-control" value="1" min="1" max="10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="add-to-cart-button">
+                        <i class="fas fa-cart-plus"></i> Agregar al carrito
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Offcanvas del Carrito -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
-        <div class="offcanvas-header">
-            <h5 id="cartOffcanvasLabel">🛍️ Tu Carrito</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div id="cart-items-container">
-                <!-- Items del carrito se cargan aquí -->
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between align-items-center">
-                <h4>Total:</h4>
-                <h4 id="cart-total">$0.00</h4>
-            </div>
-            <div class="d-grid mt-3">
-                <button id="checkout-btn" class="btn btn-success btn-lg">Ir a Pagar 💳</button>
+    <!-- Shopping Cart Modal -->
+    <div class="modal fade" id="cart-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-shopping-cart"></i> Carrito de Compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cart-items" class="container-fluid">
+                        <!-- Cart items will be inserted here -->
+                    </div>
+                    <div class="text-end mt-3">
+                        <h4 class="fw-bold">Total: $<span id="cart-total">0.00</span></h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Seguir comprando</button>
+                    <button type="button" class="btn btn-success" id="checkout-button">
+                        <i class="fas fa-credit-card"></i> Ir a pagar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- Modal de Pago -->
-    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="paymentModalLabel">💳 Pasarela de Pago</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="payment-form" novalidate>
-              <div class="mb-3">
-                <label for="fullName" class="form-label">Nombre Completo</label>
-                <input type="text" class="form-control" id="fullName" required>
-              </div>
-              <div class="mb-3">
-                <label for="cardNumber" class="form-label">Número de Tarjeta</label>
-                <input type="text" class="form-control" id="cardNumber" placeholder="0000 0000 0000 0000" required>
-              </div>
-              <div class="row">
-                <div class="col-md-7 mb-3">
-                  <label for="expiryDate" class="form-label">Fecha de Vencimiento</label>
-                  <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA" required>
+    <!-- Payment Modal -->
+    <div class="modal fade" id="payment-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-lock"></i> Pasarela de Pago</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="col-md-5 mb-3">
-                  <label for="cvv" class="form-label">Código de Seguridad</label>
-                  <input type="text" class="form-control" id="cvv" placeholder="CVV" required>
+                <div class="modal-body">
+                    <form id="payment-form">
+                        <div class="mb-3">
+                            <label for="full-name" class="form-label">Nombre completo</label>
+                            <input type="text" class="form-control" id="full-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="card-number" class="form-label">Número de tarjeta</label>
+                            <input type="text" class="form-control" id="card-number" placeholder="XXXX XXXX XXXX XXXX" required>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="expiry-date" class="form-label">Fecha de vencimiento</label>
+                                <input type="text" class="form-control" id="expiry-date" placeholder="MM/YY" required>
+                            </div>
+                            <div class="col">
+                                <label for="cvv" class="form-label">Código de seguridad</label>
+                                <input type="text" class="form-control" id="cvv" placeholder="CVV" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mt-4">
+                            <i class="fas fa-check-circle"></i> Pagar ahora
+                        </button>
+                    </form>
                 </div>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-success btn-lg">Pagar Ahora ✅</button>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Tu Script Personalizado -->
-    <script src="script.js"></script>
+    <!-- Custom JS -->
+    <script src="app.js"></script>
 </body>
 </html>
