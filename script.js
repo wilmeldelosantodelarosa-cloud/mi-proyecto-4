@@ -1,285 +1,259 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // API URL
+    const API_URL = 'https://raw.githubusercontent.com/wilmeldelosantodelarosa-cloud/gamer-api/refs/heads/main/products.json';
+
+    // Selectores del DOM
     const productContainer = document.getElementById('product-container');
     const cartCount = document.getElementById('cart-count');
     const cartItemsContainer = document.getElementById('cart-items-container');
-    const cartTotalElement = document.getElementById('cart-total');
+    const cartTotal = document.getElementById('cart-total');
     const productModal = new bootstrap.Modal(document.getElementById('productModal'));
     const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-    const paymentForm = document.getElementById('payment-form');
+    const cartOffcanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
 
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Estado de la aplicación
     let products = [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // --- CAMBIO PRINCIPAL: Rutas de imágenes locales ---
-    // Ahora, la clave "image" apunta a la carpeta "img" de tu proyecto.
-    // Nota: He ajustado las primeras 5. Deberás descargar las demás y actualizar la ruta.
-    const localProductData = [
-      {
-        "id": 1,
-        "title": "NVIDIA GeForce RTX 4090",
-        "category": "Tarjeta Gráfica",
-        "price": 1899.99,
-        "image": "img/1.jpg", // Ruta local
-        "description": "La GPU más poderosa del mercado, ideal para gaming 4K y creación de contenido."
-      },
-      {
-        "id": 2,
-        "title": "AMD Radeon RX 7900 XTX",
-        "category": "Tarjeta Gráfica",
-        "price": 1099.99,
-        "image": "img/2.jpg", // Ruta local
-        "description": "Una tarjeta gráfica de última generación con excepcional rendimiento en 4K."
-      },
-      {
-        "id": 3,
-        "title": "Intel Core i9-14900K",
-        "category": "Procesador",
-        "price": 649.99,
-        "image": "img/3.png", // Ruta local (es .png)
-        "description": "CPU tope de gama para gaming competitivo y tareas intensivas."
-      },
-      {
-        "id": 4,
-        "title": "AMD Ryzen 9 7950X",
-        "category": "Procesador",
-        "price": 599.99,
-        "image": "img/4.png", // Ruta local (es .png)
-        "description": "Procesador AM5 de 16 núcleos ideal para multitarea extrema."
-      },
-      {
-        "id": 5,
-        "title": "MSI MPG X670E Carbon WiFi",
-        "category": "Placa Base",
-        "price": 399.99,
-        "image": "img/5.png", // Ruta local (es .png)
-        "description": "Placa base premium para procesadores Ryzen serie 7000."
-      },
-      // ... DEBES CONTINUAR DESCARGANDO LAS IMÁGENES Y ACTUALIZANDO LAS RUTAS PARA LOS DEMÁS PRODUCTOS ...
-      // Ejemplo:
-      // {
-      //   "id": 6,
-      //   "title": "ASUS ROG Strix B650E-F Gaming",
-      //   "category": "Placa Base",
-      //   "price": 329.99,
-      //   "image": "img/6.jpg", // Tendrías que descargarla y guardarla como 6.jpg
-      //   "description": "Placa base con PCIe 5.0 y WiFi 6E para setups modernos."
-      // },
-    ];
-
-    // 1. Cargar y mostrar productos desde los datos locales
-    function loadProducts() {
+    // --- Carga inicial de productos ---
+    const fetchProducts = async () => {
         try {
-            products = localProductData;
-            displayProducts(products);
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error('Network response was not ok');
+            products = await response.json();
+            renderProducts();
         } catch (error) {
-            console.error('Error al cargar los productos locales:', error);
-            productContainer.innerHTML = '<p class="text-danger">No se pudieron cargar los productos.</p>';
+            console.error('Error fetching products:', error);
+            productContainer.innerHTML = `<p class="text-danger text-center">No se pudieron cargar los productos.</p>`;
         }
-    }
+    };
 
-    function displayProducts(productsToDisplay) {
+    // --- Renderizado de productos ---
+    const renderProducts = () => {
         productContainer.innerHTML = '';
-        productsToDisplay.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'col-lg-3 col-md-4 col-sm-6';
-            
-            const imageUrl = product.image;
-            const productName = product.title;
-
-            card.innerHTML = `
-                <div class="card h-100 product-card">
-                    <img src="${imageUrl}" class="card-img-top" alt="${productName}">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">${productName}</h5>
-                        <p class="card-text flex-grow-1">${product.description.substring(0, 50)}...</p>
-                        <p class="card-price">$${product.price.toFixed(2)}</p>
-                        <button class="btn btn-primary mt-auto" onclick="showProductDetails(${product.id})">Ver más</button>
+        products.forEach(product => {
+            const productCard = `
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card h-100">
+                        <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text price">$${product.price.toFixed(2)}</p>
+                            <button class="btn btn-secondary mt-auto" data-id="${product.id}">Ver más</button>
+                        </div>
                     </div>
                 </div>
             `;
-            productContainer.appendChild(card);
+            productContainer.innerHTML += productCard;
         });
-    }
+    };
 
-    // El resto del código JS no necesita cambios
+    // --- Modal de detalles del producto ---
+    productContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-secondary')) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            showProductModal(product);
+        }
+    });
     
-    // 2. Mostrar detalles del producto en el modal
-    window.showProductDetails = (productId) => {
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
+    const showProductModal = (product) => {
+        const modalTitle = document.getElementById('productModalTitle');
+        const modalBody = document.getElementById('productModalBody');
+        
+        modalTitle.textContent = product.name;
+        modalBody.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="${product.image}" class="img-fluid rounded" alt="${product.name}">
+                </div>
+                <div class="col-md-6">
+                    <h3>Detalles</h3>
+                    <ul>
+                        <li><strong>Categoría:</strong> ${product.category}</li>
+                        <li><strong>Descripción:</strong> ${product.description}</li>
+                    </ul>
+                    <h2 class="price my-3">$${product.price.toFixed(2)}</h2>
+                    <div class="d-flex align-items-center mb-3">
+                        <label for="quantity-selector" class="form-label me-2">Cantidad:</label>
+                        <input type="number" id="quantity-selector" class="form-control" value="1" min="1" style="width: 80px;">
+                    </div>
+                    <button class="btn btn-primary w-100" id="add-to-cart-btn" data-id="${product.id}">Agregar al Carrito 🛒</button>
+                </div>
+            </div>
+        `;
+        productModal.show();
 
-        document.getElementById('modal-product-image').src = product.image;
-        document.getElementById('modal-product-title').textContent = product.title;
-        document.getElementById('modal-product-description').textContent = product.description;
-        document.getElementById('modal-product-category').textContent = product.category;
-        document.getElementById('modal-product-price').textContent = `$${product.price.toFixed(2)}`;
-        document.getElementById('quantity-selector').value = 1;
-
-        const addToCartBtn = document.getElementById('add-to-cart-btn');
-        addToCartBtn.onclick = () => {
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
             const quantity = parseInt(document.getElementById('quantity-selector').value);
             addToCart(product.id, quantity);
             productModal.hide();
-        };
-
-        productModal.show();
+        });
     };
-    
-    // 3. Lógica del Carrito
-    function addToCart(productId, quantity = 1) {
-        const existingItem = cart.find(item => item.id === productId);
-        if (existingItem) {
-            existingItem.quantity += quantity;
+
+    // --- Lógica del Carrito ---
+    const addToCart = (productId, quantity = 1) => {
+        const product = products.find(p => p.id === productId);
+        const cartItem = cart.find(item => item.id === productId);
+
+        if (cartItem) {
+            cartItem.quantity += quantity;
         } else {
-            const product = products.find(p => p.id === productId);
             cart.push({ ...product, quantity });
         }
         updateCart();
-    }
-    
-    function updateCart() {
+    };
+
+    const updateCart = () => {
         renderCartItems();
         updateCartCount();
         updateCartTotal();
         localStorage.setItem('cart', JSON.stringify(cart));
-    }
+    };
 
-    function renderCartItems() {
+    const renderCartItems = () => {
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p class="text-center">Tu carrito está vacío.</p>';
-            document.getElementById('go-to-payment-btn').disabled = true;
+            cartItemsContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
             return;
         }
-
-        cartItemsContainer.innerHTML = cart.map(item => {
-            const imageUrl = item.image;
-            const productName = item.title;
-            return `
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <img src="${imageUrl}" alt="${productName}" class="cart-item-img">
-                    <div class="flex-grow-1 ms-3">
-                        <p class="mb-0 fw-bold">${productName}</p>
-                        <small>$${item.price.toFixed(2)} x ${item.quantity}</small>
+        cartItemsContainer.innerHTML = '';
+        cart.forEach(item => {
+            const cartItemHTML = `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <p class="mb-0">${item.name}</p>
+                        <p class="mb-0 text-muted">$${item.price.toFixed(2)}</p>
                     </div>
-                    <div class="d-flex align-items-center cart-item-actions">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="changeQuantity(${item.id}, -1)">-</button>
+                    <div class="quantity-controls d-flex align-items-center">
+                        <button class="btn btn-sm" data-id="${item.id}" data-action="decrease">-</button>
                         <span class="mx-2">${item.quantity}</span>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="changeQuantity(${item.id}, 1)">+</button>
-                        <button class="btn btn-sm btn-danger ms-2" onclick="removeFromCart(${item.id})"><i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-sm" data-id="${item.id}" data-action="increase">+</button>
                     </div>
+                    <button class="btn btn-danger btn-sm ms-3 remove-item-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>
                 </div>
             `;
-        }).join('');
-        document.getElementById('go-to-payment-btn').disabled = false;
-    }
+            cartItemsContainer.innerHTML += cartItemHTML;
+        });
+    };
 
-    function updateCartCount() {
-        const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
-        cartCount.textContent = totalQuantity;
-    }
-    
-    function updateCartTotal() {
+    const updateCartCount = () => {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+    };
+
+    const updateCartTotal = () => {
         const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        cartTotalElement.textContent = `$${total.toFixed(2)}`;
-    }
-    
-    window.changeQuantity = (productId, amount) => {
-        const item = cart.find(i => i.id === productId);
-        if (item) {
-            item.quantity += amount;
-            if (item.quantity <= 0) {
-                removeFromCart(productId);
+        cartTotal.textContent = `$${total.toFixed(2)}`;
+    };
+
+    cartItemsContainer.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+        
+        const id = parseInt(target.getAttribute('data-id'));
+        
+        if (target.classList.contains('remove-item-btn')) {
+            cart = cart.filter(item => item.id !== id);
+        } else if (target.dataset.action === 'increase') {
+            const item = cart.find(i => i.id === id);
+            if(item) item.quantity++;
+        } else if (target.dataset.action === 'decrease') {
+            const item = cart.find(i => i.id === id);
+            if(item && item.quantity > 1) {
+                item.quantity--;
             } else {
-                updateCart();
+                cart = cart.filter(item => item.id !== id);
             }
         }
-    };
-    
-    window.removeFromCart = (productId) => {
-        cart = cart.filter(item => item.id !== productId);
         updateCart();
-    };
-    
-    // 4. Lógica de Pago y Generación de PDF
-    paymentForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (paymentForm.checkValidity()) {
-            const successAlert = document.getElementById('payment-success-alert');
-            successAlert.classList.remove('d-none');
-            
-            const customerName = document.getElementById('fullName').value;
-
-            setTimeout(() => {
-                generatePDF(customerName);
-                paymentModal.hide();
-                successAlert.classList.add('d-none');
-                paymentForm.classList.remove('was-validated');
-                paymentForm.reset();
-                cart = [];
-                updateCart();
-            }, 1500);
-        }
-        
-        paymentForm.classList.add('was-validated');
     });
 
-    function generatePDF(customerName) {
+    // --- Lógica de Pago ---
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        if (cart.length > 0) {
+            cartOffcanvas.hide();
+            paymentModal.show();
+        } else {
+            alert("Tu carrito está vacío.");
+        }
+    });
+
+    document.getElementById('payment-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('fullName').value;
+        if (e.target.checkValidity() === false) {
+             e.stopPropagation();
+             e.target.classList.add('was-validated');
+        } else {
+            generatePDF(fullName);
+            paymentModal.hide();
+            
+            // Limpiar carrito después de la compra
+            cart = [];
+            updateCart();
+            
+            // Mostrar confirmación
+            alert('¡Gracias por tu compra! Tu ticket se está descargando.');
+        }
+    });
+
+    // --- Generación de PDF ---
+    const generatePDF = (customerName) => {
         const { jsPDF } = window.jspdf;
+        // Dimensiones para recibo térmico (80mm de ancho)
         const doc = new jsPDF({
-            orientation: 'p',
+            orientation: 'portrait',
             unit: 'mm',
-            format: [80, 200]
+            format: [80, 200] // Ancho de 80mm, alto flexible
         });
 
-        const storeName = "ShopMaster";
+        const storeName = "Kratos Tech";
         const date = new Date().toLocaleString();
-        let y = 10;
+        let y = 10; // Posición vertical inicial
 
         doc.setFont('Courier', 'bold');
         doc.setFontSize(12);
-        doc.text(storeName, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
-        y += 8;
-
+        doc.text(storeName, 40, y, { align: 'center' });
+        y += 7;
+        
         doc.setFont('Courier', 'normal');
         doc.setFontSize(8);
-        doc.text("---------------------------------", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
-        y += 5;
-
-        doc.text(`Fecha: ${date}`, 5, y);
+        doc.text(date, 40, y, { align: 'center' });
         y += 5;
         doc.text(`Cliente: ${customerName}`, 5, y);
-        y += 8;
-
-        doc.text("Producto       Cant.  Subtotal", 5, y);
-        y += 2;
-        doc.text("---------------------------------", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
         y += 5;
-
+        doc.text("---------------------------------------", 40, y, { align: 'center' });
+        y += 5;
+        
+        doc.setFontSize(7);
         cart.forEach(item => {
-            const subtotal = (item.price * item.quantity).toFixed(2);
-            const name = item.title.length > 14 ? item.title.substring(0, 14) + '.' : item.title;
-            doc.text(`${name.padEnd(16)} ${item.quantity.toString().padStart(3)}    $${subtotal.padStart(7)}`, 5, y);
-            y += 5;
-             if (y > 190) {
-                doc.addPage();
-                y = 10;
-            }
+            const itemTotal = (item.price * item.quantity).toFixed(2);
+            const line1 = `${item.quantity}x ${item.name.substring(0, 25)}`;
+            const line2 = `$${itemTotal}`;
+            doc.text(line1, 5, y);
+            doc.text(line2, 75, y, { align: 'right' });
+            y += 4;
         });
 
-        doc.text("---------------------------------", doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+        doc.text("---------------------------------------", 40, y, { align: 'center' });
         y += 5;
 
-        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
         doc.setFont('Courier', 'bold');
         doc.setFontSize(10);
-        doc.text(`TOTAL: $${total.padStart(7)}`, 40, y);
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        doc.text("TOTAL:", 5, y);
+        doc.text(`$${total.toFixed(2)}`, 75, y, { align: 'right' });
+        y += 7;
+        
+        doc.setFont('Courier', 'normal');
+        doc.setFontSize(8);
+        doc.text("¡Gracias por su compra!", 40, y, { align: 'center' });
+        
+        doc.save(`ticket_${storeName}_${new Date().getTime()}.pdf`);
+    };
 
-        doc.save(`recibo_ShopMaster_${Date.now()}.pdf`);
-    }
-
-    // --- INICIALIZACIÓN ---
-    loadProducts();
+    // --- Inicialización ---
+    fetchProducts();
     updateCart();
 });
